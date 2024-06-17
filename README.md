@@ -97,6 +97,8 @@ This README outlines the steps to train a VITS (Variational Inference for Text-t
     | sampling_rate | 24000 |
     | n_speakers  | <integer_value> |
     | n_emotions  | <integer_value> |
+    | batch_size  | <integer_value> |
+  
 
 
 * Change the file path where you have stored the json file for these 2 variables:
