@@ -1,3 +1,4 @@
+
 # VITS Model Training
 
 This README outlines the steps to train a VITS (Variational Inference for Text-to-Speech) model. Follow the instructions below to set up your environment, prepare your data, and run the training scripts in sequence.
@@ -9,7 +10,7 @@ This README outlines the steps to train a VITS (Variational Inference for Text-t
 ### A. Data Preprocessing
 
 &nbsp;1. **Download the Dataset from Graphana:**
-* Go to the Graphana TTS Dashboard
+* Go to the following link: Graphana TTS Dashboard
 * Choose the language, gender, status, style, and category.
 
     | Settings   | Value  |
@@ -93,8 +94,9 @@ This README outlines the steps to train a VITS (Variational Inference for Text-t
 
     | Variable   | Value  |
     | ------------- | ------------- |
-    |  sampling_rate | 24000 |
+    | sampling_rate | 24000 |
     | n_speakers  | <integer_value> |
+    | n_emotions  | <integer_value> |
 
 
 * Change the file path where you have stored the json file for these 2 variables:
@@ -128,6 +130,35 @@ The training logs will be saved in this file path:
 ~/ttsteam/repos/vits/logs/pilot_rasa/indictts_<lang>
 ```
 
+### C. Inference
+    
+ &nbsp;1. **Test the model:**
+
+&nbsp;&nbsp;Update the file paths in inference.py for the following variables:
+
+```bash
+hps = utils.get_hparams_from_file("/~/ttsteam/repos/vits/configs/pilot_configs/indictts_<lang>_raw.json")
+_ = utils.load_checkpoint("/~/ttsteam/repos/vits/logs/pilot_rasa/indictts_<lang>/<last_checkpoint>.pth", net_g, None)
+df = pd.read_csv("/nlsasfs/home/ai4bharat/praveens/ttsteam/datasets/indictts/<lang>/metadata_test_vits_raw.csv", header=None, sep="|")
+audio_path = f'/nlsasfs/home/ai4bharat/praveens/ttsteam/repos/vits/evaluated/pilot_rasa/<lang>/val'
+```
+
+Then, execute the following commands to run the inference:
+
+```bash
+tmux new -s <session_name>
+conda deactivate
+conda activate walnut_vits
+cd ~ttsteam/repos/vits
+python inference.py
+```
+
+&nbsp;The audio files will be saved at the following path:
+
+```bash 
+~/ttsteam/repos/vits/evaluated/pilot_rasa/<lang>/val
+```
+
 
 ## Additional Information
 
@@ -142,6 +173,3 @@ The training logs will be saved in this file path:
 
 ## Meta
 Distributed under the MIT license. See ``LICENSE`` for more information.
-
-
-
