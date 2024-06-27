@@ -49,7 +49,7 @@ This README outlines the steps to train a VITS (Variational Inference for Text-t
 
 - Run the Python script located at: `~/ttsteam/repos/vits/text/extract_file.py`
 
-- It saves the audio files to the following path: `~/ttsteam/datasets/pilot_rasa/audio/<lang>`
+- It saves the audio files to the following path: `~/ttsteam/datasets/pilot_rasa/audio_48k/<lang>`
 
 &nbsp;5. **Sample the Audio:**
 
@@ -60,6 +60,8 @@ This README outlines the steps to train a VITS (Variational Inference for Text-t
     ```bash
     ~/ttsteam/repos/audio_scripts/resample_audios.sh <input_folder> <output_folder> <num_worker_threads> <target_sampling_rate>
     ```
+
+    It saves the audio files to the following path: `~/ttsteam/datasets/pilot_rasa/audio/<lang>`
 
 &nbsp;6. **Modify the CSV File:**
 
