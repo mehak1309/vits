@@ -27,14 +27,10 @@ This README outlines the steps to train a VITS (Variational Inference for Text-t
  - The CSV file contains links to audio files. Download all audio files.
 - Transfer all audio files along with the CSV file to the CDAC server.
 
-- Save the audio files in: `
-    ~/ttsteam/datasets/pilot_rasa/audio/<lang>/
+- Save the audio files and the CSV file in: `
+    ~/ttsteam/datasets/ai4bharat_internal/<lang>/
     `
-
-- Save the CSV file in: `
-    ~/ttsteam/datasets/pilot_rasa/audio/csv_file/
-    `
-
+  
 &nbsp;3. **Set Up CDAC Environment:**
 
 - Create a screen session and enter a tmux session:
