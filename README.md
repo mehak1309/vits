@@ -28,7 +28,7 @@ This README outlines the steps to train a VITS (Variational Inference for Text-t
 - Transfer all audio files along with the CSV file to the CDAC server.
 
 - Save the audio files and the CSV file in: `
-    ~/ttsteam/datasets/ai4bharat_internal/<lang>/
+    ~/data/ai4bharat_internal/<lang>/
     `
   
 &nbsp;3. **Set Up CDAC Environment:**
@@ -47,45 +47,45 @@ This README outlines the steps to train a VITS (Variational Inference for Text-t
 
 &nbsp;4. **Extract the Audio:**
 
-- Run the Python script located at: `~/ttsteam/repos/vits/text/extract_file.py`
+- Run the Python script located at: `~/repos/text/extract_file.py`
 
-- It saves the audio files to the following path: `~/ttsteam/datasets/pilot_rasa/audio_48k/<lang>`
+- It saves the audio files to the following path: `~/data/pilot_rasa/audio_48k/<lang>`
 - 
-  It saves the CSV file to the following path: `~/ttsteam/datasets/pilot_rasa/csv_file/`
+  It saves the CSV file to the following path: `~/data/pilot_rasa/csv_file/`
 
 &nbsp;5. **Sample the Audio:**
 
-- The script is located at: `~/ttsteam/repos/audio_scripts/resample_audios.sh`
+- The script is located at: `~/repos/audio_scripts/resample_audios.sh`
 
 - Run the following command to resample the audio files, using a target sampling rate of 24,000 Hz:
 
     ```bash
-    ~/ttsteam/repos/audio_scripts/resample_audios.sh <input_folder> <output_folder> <num_worker_threads> <target_sampling_rate>
+    ~/repos/audio_scripts/resample_audios.sh <input_folder> <output_folder> <num_worker_threads> <target_sampling_rate>
     ```
 
-- It saves the audio files to the following path: `~/ttsteam/datasets/pilot_rasa/audio/<lang>`
+- It saves the audio files to the following path: `~/data/pilot_rasa/audio/<lang>`
 
 &nbsp;6. **Modify the CSV File:**
 
 - Edit the following variables in the script:
     ```bash
-    input_csv_path = '~/ttsteam/datasets/pilot_rasa/csv_file/<transferred_csv_file_name>'
-    output_directory = '~/ttsteam/datasets/indictts/<lang>/'
-    audio_path_prefix = '~/ttsteam/datasets/pilot_rasa/audio/<lang>'
+    input_csv_path = '~/data/pilot_rasa/csv_file/<transferred_csv_file_name>'
+    output_directory = '~/data/indictts/<lang>/'
+    audio_path_prefix = '~/data/pilot_rasa/audio/<lang>'
     ```
 
 - Run the script to modify the CSV file for model training:
     ```bash
-    python ~/ttsteam/repos/vits/text/modify_csv.py
+    python ~/repos/text/modify_csv.py
     ```
 
     This script splits the CSV file into train and test CSV files and saves them in the following location:
-    - Train file: `~/ttsteam/datasets/indictts/<lang>/metadata_train_vits_raw.csv`
-    - Test file: `~/ttsteam/datasets/indictts/<lang>/metadata_test_vits_raw.csv`
+    - Train file: `~/data/indictts/<lang>/metadata_train_vits_raw.csv`
+    - Test file: `~/data/indictts/<lang>/metadata_test_vits_raw.csv`
 
 &nbsp;7. **Create JSON  file:**
 
-* A JSON file needs to be created at the following filepath: `~/ttsteam/repos/vits/configs/pilot_configs/indictts_<lang>_raw.json`
+* A JSON file needs to be created at the following filepath: `~/repos/configs/pilot_configs/indictts_<lang>_raw.json`
 
 
 * Modify the values of the following variables:
@@ -103,14 +103,14 @@ This README outlines the steps to train a VITS (Variational Inference for Text-t
 
 * Change the file path where you have stored the json file for these 2 variables:
 
-    training_files: `~/ttsteam/datasets/indictts/<lang>/metadata_train_vits_raw.csv`
+    training_files: `~/data/indictts/<lang>/metadata_train_vits_raw.csv`
 
-    validation_files: `~/ttsteam/datasets/indictts/<lang>/metadata_test_vits_raw.csv`
+    validation_files: `~/data/indictts/<lang>/metadata_test_vits_raw.csv`
 
 
 &nbsp;8. **Add Symbols (Step not required):**
 
-- Go to `~/ttsteam/repos/vits/text/symbols.py`.
+- Go to `~/repos/text/symbols.py`.
 - Change the `_letters_all` variable to include characters of all languages and punctuation marks.
       
 &nbsp; &nbsp;**Note:** This step has already been done and can be skipped.
@@ -122,14 +122,14 @@ This README outlines the steps to train a VITS (Variational Inference for Text-t
 
 ```bash
 setproxy
-cd ~ttsteam/repos/vits
+cd ~/repos/
 python train_ms.py -c configs/pilot_configs/indictts_<lang>_raw.json -m pilot_rasa/indictts_<lang>
 ```
 
 The training logs will be saved in this file path: 
 
 ```bash 
-~/ttsteam/repos/vits/logs/pilot_rasa/indictts_<lang>
+~/repos/logs/pilot_rasa/indictts_<lang>
 ```
 
 ### C. Inference
@@ -139,10 +139,10 @@ The training logs will be saved in this file path:
 &nbsp;&nbsp;Update the file paths in inference.py for the following variables:
 
 ```bash
-hps = utils.get_hparams_from_file("/~/ttsteam/repos/vits/configs/pilot_configs/indictts_<lang>_raw.json")
-_ = utils.load_checkpoint("/~/ttsteam/repos/vits/logs/pilot_rasa/indictts_<lang>/<last_checkpoint>.pth", net_g, None)
-df = pd.read_csv("/nlsasfs/home/ai4bharat/praveens/ttsteam/datasets/indictts/<lang>/metadata_test_vits_raw.csv", header=None, sep="|")
-audio_path = f'/nlsasfs/home/ai4bharat/praveens/ttsteam/repos/vits/evaluated/pilot_rasa/<lang>/val'
+hps = utils.get_hparams_from_file("/~/repos/configs/pilot_configs/indictts_<lang>_raw.json")
+_ = utils.load_checkpoint("/~/repos/logs/pilot_rasa/indictts_<lang>/<last_checkpoint>.pth", net_g, None)
+df = pd.read_csv("/data/indictts/<lang>/metadata_test_vits_raw.csv", header=None, sep="|")
+audio_path = f'~/repos/evaluated/pilot_rasa/<lang>/val'
 ```
 
 Then, execute the following commands to run the inference:
@@ -151,14 +151,14 @@ Then, execute the following commands to run the inference:
 tmux new -s <session_name>
 conda deactivate
 conda activate walnut_vits
-cd ~ttsteam/repos/vits
+cd ~/repos/
 python inference.py
 ```
 
 &nbsp;The audio files will be saved at the following path:
 
 ```bash 
-~/ttsteam/repos/vits/evaluated/pilot_rasa/<lang>/val
+~/repos/evaluated/pilot_rasa/<lang>/val
 ```
 
 
